@@ -15,7 +15,8 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Servidor Mini Printer App activo en puerto ${PORT}`);
 });
+
 // Mantener vivo el proceso para que Easypanel lo detecte activo
 setInterval(() => {
-  console.log("💡 Mini Printer App sigue activa...");
+  console.log("💡 La aplicación Mini Printer sigue activa...");
 }, 30000);
