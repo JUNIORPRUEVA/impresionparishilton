@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Printer App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #0d1b2a;
+      color: white;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      color: #E8C1D0;
+    }
+    textarea {
+      width: 90%;
+      height: 150px;
+      margin-top: 1rem;
+      border-radius: 8px;
+      border: none;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      background: #E8C1D0;
+      color: #0d1b2a;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #d19bb6;
+    }
+  </style>
+  <link rel="manifest" href="manifest.json">
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+  }
+</script>
+
+</head>
+<body>
+  <h1>🖨️ Mini Printer App</h1>
+  <p>Conecta tu impresora Bluetooth y envía texto a imprimir.</p>
+
+  <textarea id="textToPrint" placeholder="Escribe el texto o ticket aquí..."></textarea><br>
+
+  <button id="connectBtn">🔗 Conectar Impresora</button>
+  <button id="printBtn" disabled>🖨️ Imprimir</button>
+
+  <script>
+    let device, server, service, characteristic;
+
+    async function connectPrinter() {
+      try {
+        device = await navigator.bluetooth.requestDevice({
+          acceptAllDevices: true,
+          optionalServices: [0xFFE0, 0xFFE1]
+        });
+        server = await device.gatt.connect();
+        service = await server.getPrimaryService(0xFFE0);
+        characteristic = await service.getCharacteristic(0xFFE1);
+        document.getElementById('printBtn').disabled = false;
+        alert("✅ Impresora conectada correctamente");
+      } catch (err) {
+        alert("❌ Error al conectar: " + err);
+      }
+    }
+
+    async function printText() {
+      const text = document.getElementById('textToPrint').value + "\n\n\n";
+      const encoder = new TextEncoder();
+      await characteristic.writeValue(encoder.encode(text));
+      alert("🖨️ Texto enviado correctamente");
+    }
+
+    document.getElementById('connectBtn').addEventListener('click', connectPrinter);
+    document.getElementById('printBtn').addEventListener('click', printText);
+  </script>
+</body>
+</html>
