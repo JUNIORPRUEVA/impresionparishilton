@@ -7,7 +7,7 @@ app.use(express.static(__dirname));
 
 // Página principal
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'indice.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Escuchar en el puerto que EasyPanel asigne
