@@ -1,6 +1,6 @@
 self.addEventListener("install", (e) => {
   e.waitUntil(
-    caches.open("printer-app").then((cache) => {
+    caches.open("mini-printer-app").then((cache) => {
       return cache.addAll(["./", "./indice.html", "./manifest.json"]);
     })
   );
