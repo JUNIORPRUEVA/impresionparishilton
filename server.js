@@ -1,22 +1,32 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 const app = express();
 
-// Servir archivos estáticos (tu HTML, manifest, etc.)
-app.use(express.static(__dirname));
+// Forzar HTTPS en EasyPanel si es proxy inverso
+app.enable("trust proxy");
+app.use((req, res, next) => {
+  if (req.secure || req.headers["x-forwarded-proto"] === "https") {
+    next();
+  } else {
+    res.redirect("https://" + req.headers.host + req.url);
+  }
+});
+
+// Servir archivos estáticos (HTML, manifest, service worker, etc.)
+app.use(express.static(path.join(__dirname, "public")));
 
 // Página principal
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Escuchar en el puerto que EasyPanel asigne
+// Puerto asignado automáticamente por EasyPanel
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Servidor Mini Printer App activo en puerto ${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Mini Printer App activa en puerto ${PORT}`);
 });
 
-// Mantener vivo el proceso para que Easypanel lo detecte activo
+// Mantener vivo
 setInterval(() => {
-  console.log("💡 La aplicación Mini Printer sigue activa...");
+  console.log("💡 Manteniendo viva la aplicación...");
 }, 30000);
