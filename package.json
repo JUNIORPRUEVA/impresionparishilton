@@ -1,6 +1,6 @@
 {
-  "name": "mini-printer-app",
-  "version": "1.0.0",
+  "name": "mini-impresora-aplicacion",
+  "version": "1.0.1",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
